@@ -10,6 +10,8 @@ int main(int argc, char *argv[])
 //    for (int i = 0; i < 10; ++i)
 //        goGnu();
 
+    goGnu();
+
     goQt();
 
     return a.exec();

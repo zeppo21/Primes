@@ -7,6 +7,9 @@
 #include <cmath>
 #include <vector>
 
+#include <QVector>
+#include <QMap>
+
 using namespace std;
 using namespace std::chrono;
 
@@ -14,9 +17,11 @@ class prime_sieve
 {
   private:
 
-      long sieveSize = 0;
-      vector<bool> Bits;
-      const std::map<const long long, const int> resultsDictionary =
+      qint64 sieveSize = 0;
+//      vector<bool> Bits;
+      QVector<bool> Bits;
+//      const std::map<const long long, const int> resultsDictionary =
+      const QMap<qint64, qint64> resultsDictionary =
       {
             {          10LL, 4         },               // Historical data for validating our results - the number of primes
             {         100LL, 25        },               // to be found under some limit, such as 168 primes under 1000
@@ -36,12 +41,13 @@ class prime_sieve
           auto result = resultsDictionary.find(sieveSize);
           if (resultsDictionary.end() == result)
               return false;
-          return result->second == countPrimes();
+//          return result->second == countPrimes();
+          return resultsDictionary[1] == countPrimes();
       }
 
    public:
 
-      prime_sieve(long n)
+      prime_sieve(qint32 n)
         : Bits(n, true), sieveSize(n)
       {
       }
@@ -52,12 +58,12 @@ class prime_sieve
 
       void runSieve()
       {
-          int factor = 3;
-          int q = (int) sqrt(sieveSize);
+          qint32 factor = 3;
+          qint32 q = (qint32) sqrt(sieveSize);
 
           while (factor <= q)
           {
-              for (int num = factor; num < sieveSize; num += 2)
+              for (qint32 num = factor; num < sieveSize; num += 2)
               {
                   if (Bits[num])
                   {
@@ -65,7 +71,7 @@ class prime_sieve
                       break;
                   }
               }
-              for (int num = factor * factor; num < sieveSize; num += factor * 2)
+              for (qint32 num = factor * factor; num < sieveSize; num += factor * 2)
                   Bits[num] = false;
 
               factor += 2;
@@ -77,8 +83,8 @@ class prime_sieve
           if (showResults)
               printf("2, ");
 
-          int count = (sieveSize >= 2);                             // Starting count (2 is prime)
-          for (int num = 3; num <= sieveSize; num+=2)
+          qint64 count = (sieveSize >= 2);                             // Starting count (2 is prime)
+          for (qint32 num = 3; num <= sieveSize; num+=2)
           {
               if (Bits[num])
               {
@@ -105,10 +111,10 @@ class prime_sieve
           printf("davepl;%d;%f;1;algorithm=base,faithful=yes,bits=1\n", passes, duration);
       }
 
-      int countPrimes()
+      qint64 countPrimes()
       {
-          int count =  (sieveSize >= 2);;
-          for (int i = 3; i < sieveSize; i+=2)
+          qint32 count =  (sieveSize >= 2);;
+          for (qint32 i = 3; i < sieveSize; i+=2)
               if (Bits[i])
                   count++;
           return count;
